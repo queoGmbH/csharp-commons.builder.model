@@ -343,5 +343,6 @@ healthchecksdb
 /.dotnet
 /tools
 /.artifacts.tests
+/.artifacts
 /tests/Commons.Persistence.Tests/coverage.cobertura.xml
 /tests/Commons.Persistence.EntityFramework.Tests/coverage.cobertura.xml
