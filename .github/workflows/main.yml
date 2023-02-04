@@ -16,6 +16,6 @@ jobs:
               uses: actions/checkout@v2
 
             - name: Run Script
-              uses: PowerShell/pwsh@v1
+              uses: actions/run-windows@v1
               with:
-                  args: '.\build.ps1'
+                  args: pwsh -Command ".\build.ps1"
