@@ -17,5 +17,6 @@ jobs:
 
             - name: Run Script
               uses: PowerShell/pwsh@v1
-              args:
-                  - '.\build.ps1'
+              with:
+                  args:
+                      - '.\build.ps1'
