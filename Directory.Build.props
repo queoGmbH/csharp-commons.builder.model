@@ -4,7 +4,7 @@
     <Authors>queo/software/csharp</Authors>
     <Company>queo GmbH</Company>
     <Copyright>2023 queo GmbH</Copyright>
-    <Product>Queo Commons ModelBuilder</Product>
+    <Product>Queo Commons ModelBuilder Library</Product>
     <AssemblyVersion>0.1.0</AssemblyVersion>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <version>$(AssemblyVersion)-Beta</version>
