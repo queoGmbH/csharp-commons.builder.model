@@ -1,0 +1,21 @@
+name: Cake Pipeline
+
+on:
+    push:
+        branches:
+            - cake-setup
+            - develop
+            - master
+
+jobs:
+    build:
+        runs-on: windows-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v2
+
+            - name: Run Script
+              uses: PowerShell/pwsh@v1
+              args:
+                  - & '.\build.ps1'
