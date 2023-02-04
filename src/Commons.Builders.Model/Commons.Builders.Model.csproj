@@ -1,18 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFrameworks>net6.0;netstandard2.0;netstandard2.1</TargetFrameworks>
-        <LangVersion>10</LangVersion>
-        <Nullable>enable</Nullable>
-        <RootNamespace>Queo.Commons.Builders.Model</RootNamespace>
-        <AssemblyName>$(RootNamespace)</AssemblyName>
-        <WarningsAsErrors>Nullable</WarningsAsErrors>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <LangVersion>10</LangVersion>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Queo.Commons.Builders.Model</RootNamespace>
+    <AssemblyName>$(RootNamespace)</AssemblyName>
+    <WarningsAsErrors>Nullable</WarningsAsErrors>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference
-            Include="System.ComponentModel.Annotations"
-            Version="5.0.0" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference
+      Include="System.ComponentModel.Annotations"
+      Version="5.0.0" />
+  </ItemGroup>
 
 </Project>
