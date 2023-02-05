@@ -15,6 +15,9 @@ namespace Queo.Commons.Builders.Model.Builder
     /// <typeparam name="TModel">Model class type</typeparam>
     public abstract class ModelBuilder<TModel> : IModelBuilder<TModel>, IRecreatable<ModelBuilder<TModel>>
     {
+
+        public static implicit operator TModel(ModelBuilder<TModel> builder) => builder.Build();
+
         /// <summary>
         ///		Counts the index per type, to ensure unique default names
         /// </summary>

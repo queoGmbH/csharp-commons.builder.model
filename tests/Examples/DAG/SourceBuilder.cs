@@ -50,14 +50,9 @@ namespace Queo.Commons.Builders.Model.Examples.DAG
 
         public SourceBuilder AddChild(Action<VertexBuilder> buildAction)
         {
-            VertexBuilder childBuilder = _factory.Create<VertexBuilder>();
+            VertexBuilder childBuilder = FromAction<VertexBuilder, Vertex>(buildAction);
             childBuilder.WithParent(this);
-            buildAction(childBuilder);
             _children.Add(childBuilder);
-
-            // childBuilder.WithParent(this);
-            // buildAction(childBuilder);
-            // _subBuilderHolder.Add(childBuilder);
             return this;
         }
     }
