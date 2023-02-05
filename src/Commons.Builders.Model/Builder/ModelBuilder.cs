@@ -57,9 +57,9 @@ namespace Queo.Commons.Builders.Model.Builder
         {
             if (_model is null)
             {
-                _factory.PreBuildPipeline.Execute();
+                _factory.PreBuildPipeline.Execute<ModelBuilder<TModel>, TModel>(this);
                 _model = BuildModel();
-                _factory.PostBuildPipeline.Execute(_model!);
+                _factory.PostBuildPipeline.Execute<TModel>(_model!);
             }
             return _model;
         }

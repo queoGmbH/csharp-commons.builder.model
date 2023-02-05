@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using Queo.Commons.Builders.Model.Builder;
+
 namespace Queo.Commons.Builders.Model.Pipeline
 {
-    public class EmptyPipeline : IPreBuildPipeline, IPostBuildPipeline<object>
+    public class EmptyPipeline : IPreBuildPipeline, IPostBuildPipeline
     {
-        public void Execute()
+        public void Execute<TBuilder, TModel>(TBuilder builder) where TBuilder : IModelBuilder<TModel>
         {
-            //Do nothing
+            // Do nothing
         }
-
-        public void Execute(object model)
+        public void Execute<TModel>(TModel model)
         {
-            //do nothing
+            // Do nothing
         }
     }
 }

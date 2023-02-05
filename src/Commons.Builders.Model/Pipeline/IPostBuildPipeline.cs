@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace Queo.Commons.Builders.Model.Pipeline
 {
-    public interface IPostBuildPipeline<in TModel>
+    public interface IPostBuildPipeline
     {
-        void Execute(TModel model);
+        void Execute<TModel>(TModel model);
     }
 }
