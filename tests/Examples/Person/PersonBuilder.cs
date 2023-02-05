@@ -8,47 +8,21 @@ namespace Queo.Commons.Builders.Model.Examples.Person
 {
     public class PersonBuilder : ModelBuilder<Person>
     {
-
         private string _name;
         private int _age;
-
         private BuilderCollection<PersonBuilder, Person> _children;
 
         public PersonBuilder(IBuilderFactory factory) : base(factory)
         {
-            _name = "John Doe";
-            _age = 0;
+            _name = $"John Doe {BuilderIndex}";
+            _age = BuilderIndex;
             _children = new BuilderCollection<PersonBuilder, Person>(_factory);
         }
 
-
-        public PersonBuilder HasChild(Action<PersonBuilder> buildAction)
-        {
-            Validate();
-            _children.Add(buildAction);
-            return this;
-        }
-
-        public PersonBuilder HasChild(IModelBuilder<Person> builder)
-        {
-            Validate();
-            _children.Add(builder);
-            return this;
-        }
-
-        public PersonBuilder WithName(string name)
-        {
-            Validate();
-            _name = name;
-            return this;
-        }
-
-        public PersonBuilder WithAge(int age)
-        {
-            Validate();
-            _age = age;
-            return this;
-        }
+        public PersonBuilder HasChild(Action<PersonBuilder> buildAction) => Set(() => _children.Add(buildAction));
+        public PersonBuilder HasChild(IBuilder<Person> builder) => Set(() => _children.Add(builder));
+        public PersonBuilder WithName(string name) => Set(() => _name = name);
+        public PersonBuilder WithAge(int age) => Set(() => _age = age);
 
         protected override Person BuildModel()
         {
@@ -59,5 +33,8 @@ namespace Queo.Commons.Builders.Model.Examples.Person
             }
             return _model;
         }
+
+        protected override PersonBuilder Set(Action action) => Set<PersonBuilder>(action);
+        public override PersonBuilder Recreate() => Recreate<PersonBuilder>();
     }
 }

@@ -23,12 +23,12 @@ namespace Queo.Commons.Builders.Model.Tests.SameInstanceBehaviour
             Type carBuilder = typeof(ModelBuilder<Car>);
 
             FieldInfo wheelBuilderIndex = wheelBuilder.GetField("BUILDER_INDEX",
-                                                                                                                    BindingFlags.NonPublic |
-                                                                                                                    BindingFlags.Static)!;
+                                                                BindingFlags.NonPublic |
+                                                                BindingFlags.Static)!;
             wheelBuilderIndex.SetValue(null, 0);
             FieldInfo carBuilderIndex = carBuilder.GetField("BUILDER_INDEX",
-                                                                                                            BindingFlags.NonPublic |
-                                                                                                            BindingFlags.Static)!;
+                                                            BindingFlags.NonPublic |
+                                                            BindingFlags.Static)!;
             carBuilderIndex.SetValue(null, 0);
         }
 

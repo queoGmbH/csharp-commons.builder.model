@@ -7,8 +7,8 @@ namespace Queo.Commons.Builders.Model.Examples.Tree
 {
     public class NodeBuilder : ModelBuilder<Node>
     {
-        string _name;
-        string _description;
+        private string _name;
+        private string _description;
         private BuilderCollection<NodeBuilder, Node> _childs;
 
         public NodeBuilder(IBuilderFactory factory) : base(factory)
@@ -17,6 +17,11 @@ namespace Queo.Commons.Builders.Model.Examples.Tree
             _name = $"Node {BuilderIndex}";
             _description = $"Node-Description {BuilderIndex}";
         }
+
+        public NodeBuilder WithName(string name) => Set(() => _name = name);
+        public NodeBuilder WithDescription(string description) => Set(() => _description = description);
+        public NodeBuilder AddChild(Action<NodeBuilder> buildAction) => Set(() => _childs.Add(buildAction));
+        public NodeBuilder AddChild(IBuilder<Node> builder) => Set(() => _childs.Add(builder));
 
         protected override Node BuildModel()
         {
@@ -28,28 +33,7 @@ namespace Queo.Commons.Builders.Model.Examples.Tree
             return node;
         }
 
-        public NodeBuilder WithName(string name)
-        {
-            _name = name;
-            return this;
-        }
-
-        public NodeBuilder WithDescription(string description)
-        {
-            this._description = description;
-            return this;
-        }
-
-        public NodeBuilder AddChild(Action<NodeBuilder> buildAction)
-        {
-            _childs.Add(buildAction);
-            return this;
-        }
-
-        public NodeBuilder AddChild(NodeBuilder builder)
-        {
-            _childs.Add(builder);
-            return this;
-        }
+        protected override NodeBuilder Set(Action action) => Set<NodeBuilder>(action);
+        public override NodeBuilder Recreate() => Recreate<NodeBuilder>();
     }
 }

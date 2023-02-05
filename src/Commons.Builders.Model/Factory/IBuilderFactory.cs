@@ -1,19 +1,19 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Queo.Commons.Builders.Model.BuildAction;
 
-using Queo.Commons.Builders.Model.Pipeline;
+namespace Queo.Commons.Builders.Model.Factory;
 
-namespace Queo.Commons.Builders.Model.Factory
+/// <summary>
+///    Factory defintion for the creation of builders
+///    Builders should always be created through the factory.
+///
+///    The factory pattern is used to be able to pass parameters down to each builder
+///    The most important parameter is is the <see cref="IPersistenceStrategy"/> 
+///    within the PostBuild action
+/// </summary>
+public interface IBuilderFactory
 {
-    public interface IBuilderFactory
-    {
-        public IPreBuildPipeline PreBuildPipeline { get; }
-        //FIXME: how to use generics for that? overridable?
-        //OR do it just on the get method?
-        //Also i don't want the pipelines to be changeable after the fact
-        public IPostBuildPipeline<object> PostBuildPipeline { get; }
-        TBuilder Create<TBuilder>();
-    }
+    public IPreBuildAction PreBuild { get; }
+    public IPostBuildAction PostBuild { get; }
+    TBuilder Create<TBuilder>();
+
 }

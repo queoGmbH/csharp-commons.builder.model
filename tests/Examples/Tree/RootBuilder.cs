@@ -9,41 +9,31 @@ namespace Queo.Commons.Builders.Model.Examples.Tree
     {
         private string _name;
         private string _description;
-        private BuilderCollection<NodeBuilder, Node> _subBuilderHolder;
+        private BuilderCollection<NodeBuilder, Node> _childs;
 
         public RootBuilder(IBuilderFactory factory) : base(factory)
         {
-            _subBuilderHolder = new BuilderCollection<NodeBuilder, Node>(_factory);
+            _childs = new BuilderCollection<NodeBuilder, Node>(_factory);
             _name = $"Root {BuilderIndex}";
             _description = $"Root-Description {BuilderIndex}";
         }
 
+        public RootBuilder WithName(string name) => Set(() => _name = name);
+        public RootBuilder WithDescription(string description) => Set(() => _description = description);
+        public RootBuilder AddChild(Action<NodeBuilder> buildAction) => Set(() => _childs.Add(buildAction));
+        public RootBuilder AddChild(IBuilder<Node> builder) => Set(() => _childs.Add(builder));
+
         protected override Root BuildModel()
         {
             var _parent = new Root(_name, _description);
-            foreach (var child in _subBuilderHolder)
+            foreach (var child in _childs)
             {
                 _parent.Add(child.Build());
             }
             return _parent;
         }
 
-        public RootBuilder WithName(string name)
-        {
-            _name = name;
-            return this;
-        }
-
-        public RootBuilder WithDescription(string description)
-        {
-            _description = description;
-            return this;
-        }
-
-        public RootBuilder AddChild(Action<NodeBuilder> buildAction)
-        {
-            _subBuilderHolder.Add(buildAction);
-            return this;
-        }
+        protected override RootBuilder Set(Action action) => Set<RootBuilder>(action);
+        public override RootBuilder Recreate() => Recreate<RootBuilder>();
     }
 }

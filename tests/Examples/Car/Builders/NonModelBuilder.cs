@@ -2,7 +2,10 @@ using Queo.Commons.Builders.Model.Builder;
 
 namespace Queo.Commons.Builders.Model.Examples.Car.Builders
 {
-    public class NonModelBuilder : IModelBuilder<Car>, IRecreatable<NonModelBuilder>
+    /// <summary>
+    ///     You can create your own version of a builder by implementing the required interfaces
+    /// </summary>
+    public class NonModelBuilder : IBuilder<Car>, IRecreatable<NonModelBuilder>
     {
         public Car Build()
         {

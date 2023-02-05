@@ -1,23 +1,23 @@
 using System;
 
+using Queo.Commons.Builders.Model.BuildAction;
 using Queo.Commons.Builders.Model.Examples.Car.Builders;
 using Queo.Commons.Builders.Model.Examples.DAG;
 using Queo.Commons.Builders.Model.Examples.Person;
 using Queo.Commons.Builders.Model.Examples.Tree;
 using Queo.Commons.Builders.Model.Factory;
-using Queo.Commons.Builders.Model.Pipeline;
 
 namespace Queo.Commons.Builders.Model.Examples
 {
     public class ExampleFactory : IBuilderFactory
     {
-        public IPreBuildPipeline PreBuildPipeline { get; }
-        public IPostBuildPipeline<object> PostBuildPipeline { get; }
+        public IPreBuildAction PreBuild { get; }
+        public IPostBuildAction PostBuild { get; }
 
         public ExampleFactory()
         {
-            PreBuildPipeline = new ExamplePreBuildPipeline();
-            PostBuildPipeline = new PersistorPipeline(new ExamplePersistor());
+            PreBuild = new LogAction();
+            PostBuild = new PersistenceAction(new ExamplePersistor());
         }
 
         public TBuilder Create<TBuilder>()

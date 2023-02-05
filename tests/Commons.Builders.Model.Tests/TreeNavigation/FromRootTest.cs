@@ -19,7 +19,7 @@ namespace Queo.Commons.Builders.Model.Tests.TreeNavigation
                                     .AddChild(c2 => c2.WithName("subsubchild 1.1.1")))
                             .AddChild(c3 => c3.WithName("subchild 1.2")))
                     .AddChild(c => c.WithName("child 2"));
-            Root parent = parentBuilder.Build();
+            Root parent = parentBuilder;
             Console.WriteLine(parent);
         }
     }

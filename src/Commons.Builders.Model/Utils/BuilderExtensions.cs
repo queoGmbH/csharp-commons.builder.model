@@ -1,23 +1,20 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 using Queo.Commons.Builders.Model.Builder;
 
-namespace Queo.Commons.Builders.Model.Utils
+namespace Queo.Commons.Builders.Model.Utils;
+
+//TODO: WIP
+public static class BuilderExtensions
 {
-    public static class BuilderExtensions
+    public static IBuilder<TModel> Immutable<TModel>(this IBuilder<TModel> mutableBuilder)
     {
-        public static IModelBuilder<TModel> Immutable<TModel>(this IModelBuilder<TModel> mutableBuilder)
-        {
-            return new ImmutableBuilderProxy<TModel>(mutableBuilder);
-        }
+        return new ImmutableBuilderProxy<TModel>(mutableBuilder);
+    }
 
-        public static IEnumerable<IModelBuilder<TModel>> Immutable<TModel>(this IEnumerable<IModelBuilder<TModel>> mutableCollection)
-        {
-            return mutableCollection.Select(b => b.Immutable());
-        }
-
+    public static IEnumerable<IBuilder<TModel>> Immutable<TModel>(this IEnumerable<IBuilder<TModel>> mutableCollection)
+    {
+        return mutableCollection.Select(b => b.Immutable());
     }
 }

@@ -7,7 +7,14 @@ namespace Queo.Commons.Builders.Model.Examples.Car.Builders
 {
     public class InvalidBuilder : ModelBuilder<object>
     {
+        /// <summary>
+        ///     Model object should not be directly referenced -> use CarBuilder
+        /// </summary>
         private Car _car = new Car();
+
+        /// <summary>
+        ///     Model object should not be directly referenced -> use GarageBuilder
+        /// </summary>
         private Garage _garage = new Garage();
         private string _name = "...";
 

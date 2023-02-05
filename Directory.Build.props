@@ -1,4 +1,5 @@
 <Project>
+
   <PropertyGroup>
     <Authors>queo/software/csharp</Authors>
     <Company>queo GmbH</Company>
@@ -8,4 +9,5 @@
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <version>$(AssemblyVersion)-Beta</version>
   </PropertyGroup>
+
 </Project>

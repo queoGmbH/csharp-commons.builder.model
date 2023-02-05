@@ -20,7 +20,6 @@ namespace Queo.Commons.Builders.Model.Examples.Car.Builders
         public CarBuilder WithName(string name) => Set(() => _name = name);
         public CarBuilder AddWheel(WheelBuilder wheel) => Set(() => _wheels.Add(wheel));
         public CarBuilder AddWheel(Action<WheelBuilder> action) => Set(() => _wheels.Add(action));
-
         public IEnumerable<WheelBuilder> GetWheels() => _wheels.GetBuilders<WheelBuilder>();
 
         protected override Car BuildModel()
@@ -36,6 +35,5 @@ namespace Queo.Commons.Builders.Model.Examples.Car.Builders
 
         public override CarBuilder Recreate() => Recreate<CarBuilder>();
         protected override CarBuilder Set(Action action) => Set<CarBuilder>(action);
-        public static implicit operator Car(CarBuilder builder) => builder.Build();
     }
 }

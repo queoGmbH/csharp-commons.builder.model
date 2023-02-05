@@ -1,15 +1,13 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Queo.Commons.Builders.Model.Builder
 {
-    public class ImmutableBuilderProxy<TModel> : IModelBuilder<TModel>
+    //TODO: WIP
+    public class ImmutableBuilderProxy<TModel> : IBuilder<TModel>
     {
-        private readonly IModelBuilder<TModel> _sourceBuilder;
+        private readonly IBuilder<TModel> _sourceBuilder;
 
-        public ImmutableBuilderProxy(IModelBuilder<TModel> sourceBuilder)
+        public ImmutableBuilderProxy(IBuilder<TModel> sourceBuilder)
         {
             _sourceBuilder = sourceBuilder;
         }

@@ -1,27 +1,29 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
+using Queo.Commons.Builders.Model.BuildAction;
 using Queo.Commons.Builders.Model.Peristence;
-using Queo.Commons.Builders.Model.Pipeline;
 
-namespace Queo.Commons.Builders.Model.Factory
+namespace Queo.Commons.Builders.Model.Factory;
+
+/// <summary>
+///    Factory basis that uses an persistence strategy.
+///    Extend this factory if you want to save the builders' models into a db
+///    or another persistence source.
+///
+///    This Factory will have as only action the saving of model according to the PersistenceStrategy.
+/// </summary>
+public abstract class PersistableBuilderFactory : IBuilderFactory
 {
-    public abstract class PersistableBuilderFactory : IBuilderFactory
+    public IPreBuildAction PreBuild { get; }
+    public IPostBuildAction PostBuild { get; }
+
+    protected PersistableBuilderFactory(IPersistenceStrategy persistor)
     {
-        protected PersistableBuilderFactory(IPersistor persistor)
-        {
-            if (persistor is null) throw new ArgumentNullException("Persistor can not be null!");
-            var pipeline = new PersistorPipeline(persistor);
-            PreBuildPipeline = pipeline;
-            PostBuildPipeline = pipeline;
-        }
+        if (persistor is null) throw new ArgumentNullException("PersistenceStrategy can not be null!");
 
-        public abstract TBuilder Create<TBuilder>();
-
-        public IPreBuildPipeline PreBuildPipeline { get; }
-
-        public IPostBuildPipeline<object> PostBuildPipeline { get; }
+        PreBuild = new EmptyAction();
+        PostBuild = new PersistenceAction(persistor);
     }
+
+    public abstract TBuilder Create<TBuilder>();
 }

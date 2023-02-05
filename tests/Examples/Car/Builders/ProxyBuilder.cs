@@ -30,8 +30,6 @@ namespace Queo.Commons.Builders.Model.Examples.Car.Builders
             };
         }
 
-        public static implicit operator Garage(ProxyBuilder builder) => builder.Build();
-
         protected override ProxyBuilder Set(Action action) => Set<ProxyBuilder>(action);
         public override ProxyBuilder Recreate() => Recreate<ProxyBuilder>();
     }

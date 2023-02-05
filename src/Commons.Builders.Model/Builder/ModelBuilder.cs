@@ -1,10 +1,8 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
-using System.Reflection.Emit;
 
 using Queo.Commons.Builders.Model.Factory;
-using Queo.Commons.Builders.Model.Peristence;
 using Queo.Commons.Builders.Model.Utils;
 
 namespace Queo.Commons.Builders.Model.Builder
@@ -13,17 +11,20 @@ namespace Queo.Commons.Builders.Model.Builder
     ///     Base class for a model builder.
     /// </summary>
     /// <typeparam name="TModel">Model class type</typeparam>
-    public abstract class ModelBuilder<TModel> : IModelBuilder<TModel>, IRecreatable<ModelBuilder<TModel>>
+    public abstract class ModelBuilder<TModel> : IBuilder<TModel>, IRecreatable<ModelBuilder<TModel>>
     {
+
+        public static implicit operator TModel(ModelBuilder<TModel> builder) => builder.Build();
+
         /// <summary>
         ///		Counts the index per type, to ensure unique default names
         /// </summary>
         private static int BUILDER_INDEX = 0;
 
         /// <summary>
-        ///     Access to builder index in inherited classes
+        ///     Preserve index information that this builder used to build it's model
         /// </summary>
-        protected int BuilderIndex => BUILDER_INDEX;
+        public int BuilderIndex { get; private set; }
 
         /// <summary>
         ///		'Cached' Model, to ensure the same instance is returned when calling 'Build()'
@@ -35,6 +36,13 @@ namespace Queo.Commons.Builders.Model.Builder
         ///		If that happens he will always return the same instance and can not be modified anymore.
         /// </summary>
         public bool IsFinal => _model is not null;
+
+        /// <summary>
+        ///    Factory for creating child builders that this model builder might use.
+        ///    The factory also holds the Persistor which is used to specify how to persist the model.
+        ///    All child builders will get the same persistor as it's parent by default.
+        ///    The constructor of the specific ModelBuilder should call _factory.Create<Type>() to act this way.
+        /// </summary>
         protected readonly IBuilderFactory _factory;
 
         /// <summary>
@@ -46,7 +54,7 @@ namespace Queo.Commons.Builders.Model.Builder
         {
             if (factory is null) throw new ArgumentNullException("Factory can not be null!");
             _factory = factory;
-            BUILDER_INDEX++;
+            BuilderIndex = ++BUILDER_INDEX;
         }
 
         /// <inheritdoc/>
@@ -54,9 +62,9 @@ namespace Queo.Commons.Builders.Model.Builder
         {
             if (_model is null)
             {
-                _factory.PreBuildPipeline.Execute();
+                _factory.PreBuild.Execute<TModel>(this);
                 _model = BuildModel();
-                _factory.PostBuildPipeline.Execute(_model!);
+                _factory.PostBuild.Execute<TModel>(_model!);
             }
             return _model;
         }
@@ -80,7 +88,7 @@ namespace Queo.Commons.Builders.Model.Builder
             if (IsFinal)
             {
                 throw new InvalidOperationException("The builder was already built and can not change anymore." +
-                                                                                        "Use the 'Recreate' method to copy the builder configuration instead.");
+                                                    "Use the 'Recreate' method to copy the builder configuration instead.");
             }
         }
 
@@ -131,8 +139,8 @@ namespace Queo.Commons.Builders.Model.Builder
             object builderCopyInstance = GetBuilderInstance(builderType);
 
             foreach (FieldInfo field in builderType.GetFields(BindingFlags.NonPublic |
-                                                               BindingFlags.Instance |
-                                                               BindingFlags.DeclaredOnly))
+                                                              BindingFlags.Instance |
+                                                              BindingFlags.DeclaredOnly))
             {
                 RecreateField(builderCopyInstance, field);
             }
@@ -141,16 +149,18 @@ namespace Queo.Commons.Builders.Model.Builder
 
         private object GetBuilderInstance(Type builderType)
         {
-            object builderCopyInstance;
+            object? builderCopyInstance;
             try
             {
                 builderCopyInstance = Activator.CreateInstance(builderType, _factory);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //factory constructor not available, try default constructor
                 builderCopyInstance = Activator.CreateInstance(builderType);
             }
+
+            if (builderCopyInstance is null) throw new ArgumentNullException($"Activator could not create an instance of the type {builderType}!");
 
             return builderCopyInstance;
         }
@@ -161,15 +171,25 @@ namespace Queo.Commons.Builders.Model.Builder
             {
                 CopyValue(builderCopyInstance, field);
             }
-            else if (field.FieldType.ImplementsInterface(typeof(IRecreatable<>)))
+            else if (GetObjectType(field).ImplementsInterface(typeof(IRecreatable<>)))
             {
                 InvokeRecreatable(builderCopyInstance, field);
             }
             else
             {
-                throw new ValidationException("Invalid builder implementation. The builder should only contain " +
-                                                                          "ValueTypes, ModelBuilders or BuilderCollections!");
+                throw new ValidationException("Error during recreation of the builder: " +
+                                              $"Only value types and {typeof(IRecreatable<>)} can be recreated!" +
+                                              $"\nFailed on type: {GetObjectType(field)}");
             }
+        }
+
+        /// <summary>
+        ///     Get's the actual type of the value that's assinged to the field (object type)
+        /// </summary>
+        /// <param name="field">The field (reference type)</param>
+        private Type GetObjectType(FieldInfo field)
+        {
+            return GetFieldValue(field).GetType();
         }
 
         /// <summary>
@@ -179,8 +199,16 @@ namespace Queo.Commons.Builders.Model.Builder
         /// <param name="field">Field info of the value</param>
         private void CopyValue(object copyInstance, FieldInfo field)
         {
-            object value = field.GetValue(this);
+            object value = GetFieldValue(field);
             field.SetValue(copyInstance, value);
+        }
+
+        private object GetFieldValue(FieldInfo field)
+        {
+            object? value = field.GetValue(this);
+            if (value is null) throw new ArgumentNullException($"The model builder doesn't contain a field withfthe name {field.Name}!");
+
+            return value;
         }
 
         /// <summary>
@@ -191,9 +219,14 @@ namespace Queo.Commons.Builders.Model.Builder
         /// <param name="field">Field Info of the BuilderCollection</param>
         private void InvokeRecreatable(object builderCopyInstance, FieldInfo field)
         {
-            object recreatable = field.GetValue(this);
-            object newCreated = field.FieldType.GetMethod(nameof(IRecreatable<object>.Recreate))
-                                               .Invoke(recreatable, null);
+            object recreatable = GetFieldValue(field);
+            string recreateMethodName = nameof(IRecreatable<object>.Recreate);
+            MethodInfo? recreateMethod = recreatable.GetType().GetMethod(recreateMethodName);
+            if (recreateMethod is null) throw new ArgumentNullException($"No method with the name {recreateMethodName} was found on type {recreatable.GetType().Name}");
+
+            object? newCreated = recreateMethod.Invoke(recreatable, null);
+            if (newCreated is null) throw new ArgumentNullException($"Invalid recreate implementation: The recreate method of type {recreatable.GetType().Name} returned a null value.");
+
             field.SetValue(builderCopyInstance, newCreated);
         }
 
@@ -206,7 +239,7 @@ namespace Queo.Commons.Builders.Model.Builder
         /// <typeparam name="TBuilder">Builder type to be created</typeparam>
         /// <typeparam name="TBuilderModel">Model type that the builder produces</typeparam>
         protected TBuilder FromAction<TBuilder, TBuilderModel>(Action<TBuilder> builderAction)
-                           where TBuilder : IModelBuilder<TBuilderModel>
+                           where TBuilder : IBuilder<TBuilderModel>
         {
             return builderAction.ToBuilder(_factory);
         }

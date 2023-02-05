@@ -19,8 +19,8 @@ namespace Queo.Commons.Builders.Model.Tests.DagNavigation
             SourceBuilder otherParent = Create.Source().WithName("Other parent");
 
             Vertex child = Create.Vertex()
-                                 .WithParent(parent).AddChild(c => c.WithName("OwnChild"))
-                                                                    .AddChild(c => c.WithName("AdoptedChild").WithParent(otherParent))
+                                 .WithSource(parent).AddChild(c => c.WithName("OwnChild"))
+                                                                    .AddChild(c => c.WithName("AdoptedChild").WithSource(otherParent))
                                                                     .Build();
             Console.WriteLine(child.ToString(" - "));
         }
@@ -32,9 +32,9 @@ namespace Queo.Commons.Builders.Model.Tests.DagNavigation
             SourceBuilder parent = Create.Source().WithName("RealParent");
             SourceBuilder otherParent = Create.Source().WithName("Other parent");
 
-            VertexBuilder otherChild = Create.Vertex().WithParent(otherParent);
+            VertexBuilder otherChild = Create.Vertex().WithSource(otherParent);
             Vertex child = Create.Vertex()
-                                 .WithParent(parent).AddChild(c => c.WithName("OwnChild"))
+                                 .WithSource(parent).AddChild(c => c.WithName("OwnChild"))
                                                                     .AddChild(otherChild)
                                                                     .Build();
             Console.WriteLine(child.ToString(" - "));
@@ -53,8 +53,8 @@ namespace Queo.Commons.Builders.Model.Tests.DagNavigation
             SourceBuilder p1 = Create.Source().WithName("FirstParent");
             SourceBuilder p2 = Create.Source().WithName("OtherParent");
 
-            VertexBuilder c1 = Create.Vertex().WithParent(p1).WithName("InjectedChild");
-            Vertex c2 = Create.Vertex().WithParent(p2)
+            VertexBuilder c1 = Create.Vertex().WithSource(p1).WithName("InjectedChild");
+            Vertex c2 = Create.Vertex().WithSource(p2)
                                                              .WithName("OwnChild")
                                                              .AddChild(c => c = c1)
                                                              .Build();

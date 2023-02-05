@@ -34,12 +34,12 @@ namespace Queo.Commons.Builders.Model.Tests.SameInstanceBehaviour
         public void Recreate_Primitives_TestValues()
         {
             WheelBuilder builder = Create.Wheel()
-                                                                     .WithBrand("Michelin")
-                                                                     .WithPosition(3);
+                                         .WithBrand("Michelin")
+                                         .WithPosition(3);
             Wheel original = builder.Build();
 
             WheelBuilder builderCopy = builder.Recreate()
-                                                                              .WithBrand("Continental");
+                                              .WithBrand("Continental");
             Wheel copy = builderCopy.Build();
 
             original.Brand.Should().NotBe(copy.Brand);
@@ -61,13 +61,13 @@ namespace Queo.Commons.Builders.Model.Tests.SameInstanceBehaviour
         public void Recreate_SubBuilders_TestValues()
         {
             GarageBuilder builder = Create.Garage().WithAddress("Dresden")
-                                                                                       .WithCar(c => c.WithName("Polo")
-                                                                                                                      .AddWheel(w => w.WithBrand("Michelin")));
+                                                   .WithCar(c => c.WithName("Polo")
+                                                   .AddWheel(w => w.WithBrand("Michelin")));
             Garage original = builder.Build();
 
             GarageBuilder builderCopy = builder.Recreate()
-                                                                               .WithCar(c => c.WithName("Golf")
-                                                                                                              .AddWheel(w => w.WithBrand("Dunlop")));
+                                               .WithCar(c => c.WithName("Golf")
+                                               .AddWheel(w => w.WithBrand("Dunlop")));
             Garage copy = builderCopy.Build();
 
             original.Address.Should().Be(copy.Address);
@@ -81,13 +81,14 @@ namespace Queo.Commons.Builders.Model.Tests.SameInstanceBehaviour
         [Test]
         public void Recreate_BuilderCollection_TestValues()
         {
-            CarBuilder builder = Create.Car().WithName("Polo")
-                                                                             .AddWheel(w => w.WithBrand("Michelin").WithPosition(2))
-                                                                             .AddWheel(w => w.WithBrand("Continental").WithPosition(4));
+            CarBuilder builder = Create.Car()
+                                       .WithName("Polo")
+                                       .AddWheel(w => w.WithBrand("Michelin").WithPosition(2))
+                                       .AddWheel(w => w.WithBrand("Continental").WithPosition(4));
             Car original = builder.Build();
 
             CarBuilder builderCopy = builder.Recreate()
-                                                                            .AddWheel(w => w.WithBrand("Dunlop").WithPosition(22));
+                                            .AddWheel(w => w.WithBrand("Dunlop").WithPosition(22));
             Car copy = builderCopy.Build();
 
             original.Name.Should().Be(copy.Name);
@@ -100,9 +101,10 @@ namespace Queo.Commons.Builders.Model.Tests.SameInstanceBehaviour
         [Test]
         public void Recreate_BuilderCollection_ShouldContainNewBuilders()
         {
-            CarBuilder builder = Create.Car().WithName("Polo")
-                                                                             .AddWheel(w => w.WithBrand("Michelin").WithPosition(2))
-                                                                             .AddWheel(w => w.WithBrand("Continental").WithPosition(4));
+            CarBuilder builder = Create.Car()
+                                       .WithName("Polo")
+                                       .AddWheel(w => w.WithBrand("Michelin").WithPosition(2))
+                                       .AddWheel(w => w.WithBrand("Continental").WithPosition(4));
             Car original = builder.Build();
 
             CarBuilder builderCopy = builder.Recreate();
@@ -122,9 +124,10 @@ namespace Queo.Commons.Builders.Model.Tests.SameInstanceBehaviour
         [Test]
         public void Recreate_ProxyBuilder_ShouldBeNew()
         {
-            ProxyBuilder builder = Create.Proxy().WithName("Polo")
-                                                                                     .AddWheel(w => w.WithBrand("Michelin").WithPosition(2))
-                                                                                     .AddWheel(w => w.WithBrand("Continental").WithPosition(4));
+            ProxyBuilder builder = Create.Proxy()
+                                         .WithName("Polo")
+                                         .AddWheel(w => w.WithBrand("Michelin").WithPosition(2))
+                                         .AddWheel(w => w.WithBrand("Continental").WithPosition(4));
             Garage original = builder.Build();
 
             ProxyBuilder builderCopy = builder.Recreate();

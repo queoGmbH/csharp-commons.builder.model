@@ -9,7 +9,7 @@ namespace Queo.Commons.Builders.Model.Examples.DAG
     {
         string _name;
         string _description;
-        private SourceBuilder _source;
+        private IBuilder<Source> _source;
         private BuilderCollection<VertexBuilder, Vertex> _vertices;
 
         public VertexBuilder(IBuilderFactory factory) : base(factory)
@@ -22,8 +22,6 @@ namespace Queo.Commons.Builders.Model.Examples.DAG
 
         protected override Vertex BuildModel()
         {
-            //ParentBuilder parentBuilder = Create.Parent();
-            //_parentBuilderAction.Invoke(parentBuilder);
             Source parent = _source.Build();
             var vertex = new Vertex(_name, _description, parent);
             foreach (var targetVertex in _vertices)
@@ -33,50 +31,20 @@ namespace Queo.Commons.Builders.Model.Examples.DAG
             return vertex;
         }
 
-        public VertexBuilder WithName(string name)
+        public VertexBuilder WithName(string name) => Set(() => _name = name);
+        public VertexBuilder WithDescription(string description) => Set(() => _description = description);
+        public VertexBuilder AddChild(Action<VertexBuilder> buildAction) => Set(() =>
         {
-            _name = name;
-            return this;
-        }
-
-        public VertexBuilder WithDescription(string description)
+            _vertices.Add(c => buildAction(c.WithSource(_source)));
+        });
+        public VertexBuilder AddChild(IBuilder<Vertex> builder) => Set(() => _vertices.Add(builder));
+        public VertexBuilder WithSource(IBuilder<Source> sourceBuilder) => Set(() => _source = sourceBuilder);
+        public VertexBuilder WithSource(Action<SourceBuilder> builderAction) => Set(() =>
         {
-            this._description = description;
-            return this;
-        }
+            _source = FromAction<SourceBuilder, Source>(builderAction);
+        });
 
-        public VertexBuilder AddChild(Action<VertexBuilder> buildAction)
-        {
-            _vertices.Add(c => buildAction(c.WithParent(_source)));
-            // ChildBuilder childBuilder = Create.Child();
-            // childBuilder.WithParent(_parentBuilder);
-            // buildAction.Invoke(childBuilder);
-            // _builders.Add(childBuilder);
-
-            // ChildBuilder childBuilder = Create.Child();
-            // childBuilder.WithParent(_parentBuilder);
-            // buildAction.Invoke(childBuilder);
-            // _holder.Add(childBuilder);
-            return this;
-        }
-
-        public VertexBuilder AddChild(VertexBuilder builder)
-        {
-            // Diese Methode sollte es in diesem Fall wahrscheinlich nicht geben.
-            _vertices.Add(builder);
-            return this;
-        }
-
-        //public ChildBuilder WithParent(Action<ParentBuilder> parentBuilderAction)
-        //{
-        //    _parentBuilderAction = parentBuilderAction;
-        //    return this;
-        //}
-
-        public VertexBuilder WithParent(SourceBuilder parentBuilder)
-        {
-            _source = parentBuilder;
-            return this;
-        }
+        protected override VertexBuilder Set(Action action) => Set<VertexBuilder>(action);
+        public override VertexBuilder Recreate() => Recreate<VertexBuilder>();
     }
 }
