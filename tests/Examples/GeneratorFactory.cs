@@ -14,7 +14,7 @@ namespace Queo.Commons.Builders.Model.Examples
     {
         private IDataGenerator _generator;
         public IPreBuildPipeline PreBuildPipeline { get; }
-        public IPostBuildPipeline<object> PostBuildPipeline { get; }
+        public IPostBuildPipeline PostBuildPipeline { get; }
 
         public GeneratorFactory(IDataGenerator generator)
         {

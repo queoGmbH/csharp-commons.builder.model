@@ -14,7 +14,7 @@ namespace Queo.Commons.Builders.Model.Examples
             //TODO: is it good that this is possible?
             //builde.Build()
             var modelType = typeof(TModel);
-            Console.WriteLine("Pipeline: I'm about to build something, this is soo exciting!!!!");
+            Console.WriteLine($"Pipeline: About to build {modelType.Name} using a {builderType.Name} builder.");
         }
     }
 }

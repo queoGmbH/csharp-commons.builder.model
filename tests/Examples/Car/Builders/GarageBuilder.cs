@@ -18,7 +18,7 @@ namespace Queo.Commons.Builders.Model.Examples.Car.Builders
         }
 
         public GarageBuilder WithAddress(string address) => Set(() => _address = address);
-        public GarageBuilder WithCar(CarBuilder car) => Set(() => _car = car);
+        public GarageBuilder WithCar(IBuilder<Car> car) => Set(() => _car = car);
         public GarageBuilder WithCar(Action<CarBuilder> builderAction) => Set(() =>
         {
             _car = FromAction<CarBuilder, Car>(builderAction);

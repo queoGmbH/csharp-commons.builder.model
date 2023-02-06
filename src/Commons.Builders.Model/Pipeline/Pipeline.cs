@@ -7,33 +7,34 @@ using Queo.Commons.Builders.Model.Builder;
 
 namespace Queo.Commons.Builders.Model.Pipeline
 {
+    //FIXME:
     public class Pipeline<TModel> : IPreBuildPipeline, IPostBuildPipeline
     {
         private ICollection<Action<TModel>> _postBuildCommands;
-        private ICollection<Action<Type, Type>> _preBuildCommands;
+        // private ICollection<Action<IBuilder<TModel>> _preBuildCommands;
         public Pipeline()
         {
             _postBuildCommands = new List<Action<TModel>>();
-            _preBuildCommands = new List<Action<IBuilder<TModel>>>();
+            // _preBuildCommands = new List<Action<IBuilder<TModel>>>();
         }
 
         public void Execute()
         {
-            foreach (var action in _preBuildCommands)
-            {
-                action(builderType, modelType);
-            }
+            // foreach (var action in _preBuildCommands)
+            // {
+            //     action(builderType, modelType);
+            // }
         }
         public void Execute<TModel>(TModel model)
         {
             foreach (var action in _postBuildCommands)
             {
-                action(model);
+                // action(model);
             }
         }
 
         public void Add(Action<TModel> command) => _postBuildCommands.Add(command);
-        public void Add(Action<Type, Type> command) => _preBuildCommands.Add(command);
-
+        // public void Add(Action<Type, Type> command) => _preBuildCommands.Add(command);
+        public void Execute<TBuilder, TModel1>(TBuilder builder) where TBuilder : IBuilder<TModel1> => throw new NotImplementedException();
     }
 }

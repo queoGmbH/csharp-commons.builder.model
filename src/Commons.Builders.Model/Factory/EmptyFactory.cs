@@ -17,8 +17,7 @@ namespace Queo.Commons.Builders.Model.Factory
         }
 
         public IPreBuildPipeline PreBuildPipeline { get; }
-        public IPostBuildPipeline<object> PostBuildPipeline { get; }
-
+        public IPostBuildPipeline PostBuildPipeline { get; }
         public TBuilder Create<TBuilder>()
         {
             throw new InvalidOperationException("Create is not supposed to be called on an empty factory! " +

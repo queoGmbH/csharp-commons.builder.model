@@ -171,7 +171,7 @@ namespace Queo.Commons.Builders.Model.Builder
             else
             {
                 throw new ValidationException("Invalid builder implementation. The builder should only contain " +
-                                                                          "ValueTypes, ModelBuilders or BuilderCollections!");
+                                              "ValueTypes, ModelBuilders or BuilderCollections!");
             }
         }
 

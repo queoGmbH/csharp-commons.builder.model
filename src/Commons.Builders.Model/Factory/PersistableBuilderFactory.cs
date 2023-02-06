@@ -13,15 +13,14 @@ namespace Queo.Commons.Builders.Model.Factory
         protected PersistableBuilderFactory(IPersistor persistor)
         {
             if (persistor is null) throw new ArgumentNullException("Persistor can not be null!");
+
             var pipeline = new PersistorPipeline(persistor);
             PreBuildPipeline = pipeline;
             PostBuildPipeline = pipeline;
         }
 
         public abstract TBuilder Create<TBuilder>();
-
         public IPreBuildPipeline PreBuildPipeline { get; }
-
-        public IPostBuildPipeline<object> PostBuildPipeline { get; }
+        public IPostBuildPipeline PostBuildPipeline { get; }
     }
 }

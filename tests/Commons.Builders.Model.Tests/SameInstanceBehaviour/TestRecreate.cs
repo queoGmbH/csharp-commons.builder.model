@@ -61,13 +61,13 @@ namespace Queo.Commons.Builders.Model.Tests.SameInstanceBehaviour
         public void Recreate_SubBuilders_TestValues()
         {
             GarageBuilder builder = Create.Garage().WithAddress("Dresden")
-                                                                                       .WithCar(c => c.WithName("Polo")
-                                                                                                                      .AddWheel(w => w.WithBrand("Michelin")));
+                                                   .WithCar(c => c.WithName("Polo")
+                                                   .AddWheel(w => w.WithBrand("Michelin")));
             Garage original = builder.Build();
 
             GarageBuilder builderCopy = builder.Recreate()
-                                                                               .WithCar(c => c.WithName("Golf")
-                                                                                                              .AddWheel(w => w.WithBrand("Dunlop")));
+                                               .WithCar(c => c.WithName("Golf")
+                                               .AddWheel(w => w.WithBrand("Dunlop")));
             Garage copy = builderCopy.Build();
 
             original.Address.Should().Be(copy.Address);

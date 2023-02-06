@@ -12,7 +12,7 @@ namespace Queo.Commons.Builders.Model.Examples
     public class ExampleFactory : IBuilderFactory
     {
         public IPreBuildPipeline PreBuildPipeline { get; }
-        public IPostBuildPipeline<object> PostBuildPipeline { get; }
+        public IPostBuildPipeline PostBuildPipeline { get; }
 
         public ExampleFactory()
         {
