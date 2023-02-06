@@ -13,7 +13,7 @@ namespace Queo.Commons.Builders.Model.Examples.Car.Builders
         public WheelBuilder(IBuilderFactory factory) : base(factory)
         {
             _brand = $"Brand {BuilderIndex}";
-            _position = 1;
+            _position = BuilderIndex;
         }
 
         public WheelBuilder WithBrand(string name) => Set(() => _brand = name);
@@ -27,6 +27,5 @@ namespace Queo.Commons.Builders.Model.Examples.Car.Builders
 
         protected override WheelBuilder Set(Action action) => Set<WheelBuilder>(action);
         public override WheelBuilder Recreate() => Recreate<WheelBuilder>();
-        public static implicit operator Wheel(WheelBuilder builder) => builder.Build();
     }
 }

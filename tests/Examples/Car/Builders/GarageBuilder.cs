@@ -9,7 +9,7 @@ namespace Queo.Commons.Builders.Model.Examples.Car.Builders
     {
 
         private string _address;
-        private CarBuilder _car;
+        private IModelBuilder<Car> _car;
 
         public GarageBuilder(IBuilderFactory factory) : base(factory)
         {
@@ -35,6 +35,5 @@ namespace Queo.Commons.Builders.Model.Examples.Car.Builders
 
         public override GarageBuilder Recreate() => Recreate<GarageBuilder>();
         protected override GarageBuilder Set(Action action) => Set<GarageBuilder>(action);
-        public static implicit operator Garage(GarageBuilder builder) => builder.Build();
     }
 }

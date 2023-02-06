@@ -21,13 +21,7 @@ namespace Queo.Commons.Builders.Model.Examples.DAG
 
         protected override Source BuildModel()
         {
-            var _parent = new Source(_name, _description);
-            // foreach (Vertex child in _childBuilders)
-            // {
-            //     _children.Add(child);
-            // }
-
-            return _parent;
+            return new Source(_name, _description);
         }
 
         public IEnumerable<Vertex> GetChildren()
@@ -36,24 +30,16 @@ namespace Queo.Commons.Builders.Model.Examples.DAG
             return _children.BuildModels();
         }
 
-        public SourceBuilder WithName(string name)
-        {
-            _name = name;
-            return this;
-        }
-
-        public SourceBuilder WithDescription(string description)
-        {
-            _description = description;
-            return this;
-        }
-
-        public SourceBuilder AddChild(Action<VertexBuilder> buildAction)
+        public SourceBuilder WithName(string name) => Set(() => _name = name);
+        public SourceBuilder WithDescription(string description) => Set(() => _description = description);
+        public SourceBuilder AddChild(Action<VertexBuilder> buildAction) => Set(() =>
         {
             VertexBuilder childBuilder = FromAction<VertexBuilder, Vertex>(buildAction);
-            childBuilder.WithParent(this);
+            childBuilder.WithSource(this);
             _children.Add(childBuilder);
-            return this;
-        }
+        });
+
+        protected override SourceBuilder Set(Action action) => Set<SourceBuilder>(action);
+        public override SourceBuilder Recreate() => Recreate<SourceBuilder>();
     }
 }
