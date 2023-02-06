@@ -11,8 +11,8 @@ namespace Queo.Commons.Builders.Model.Builder
 {
     public class BuilderCollection<TDefaultBuilder, TModel>
                     : IRecreatable<BuilderCollection<TDefaultBuilder, TModel>>,
-                      IEnumerable<IModelBuilder<TModel>>
-                    where TDefaultBuilder : IModelBuilder<TModel>
+                      IEnumerable<IBuilder<TModel>>
+                    where TDefaultBuilder : IBuilder<TModel>
     {
         private readonly IBuilderFactory _factory;
         public BuilderCollection(IBuilderFactory factory)
@@ -20,12 +20,12 @@ namespace Queo.Commons.Builders.Model.Builder
             _factory = factory;
         }
 
-        private readonly ICollection<IModelBuilder<TModel>> _builders = new List<IModelBuilder<TModel>>();
+        private readonly ICollection<IBuilder<TModel>> _builders = new List<IBuilder<TModel>>();
 
         /// <summary>
         ///		Generalized add method to add any kind of builder for the Model
         /// </summary>
-        public void Add(IModelBuilder<TModel> builder)
+        public void Add(IBuilder<TModel> builder)
         {
             _builders.Add(builder);
         }
@@ -50,12 +50,12 @@ namespace Queo.Commons.Builders.Model.Builder
         ///		Add method for a specific type of builder
         /// </summary>
         /// <typeparam name="TCustomBuilder">A specific builder that retuns the Colletions Model</typeparam>
-        public void Add<TCustomBuilder>(TCustomBuilder builder) where TCustomBuilder : IModelBuilder<TModel>
+        public void Add<TCustomBuilder>(TCustomBuilder builder) where TCustomBuilder : IBuilder<TModel>
         {
             _builders.Add(builder);
         }
 
-        public void Add<TCustomBuilder>(IEnumerable<TCustomBuilder> builders) where TCustomBuilder : IModelBuilder<TModel>
+        public void Add<TCustomBuilder>(IEnumerable<TCustomBuilder> builders) where TCustomBuilder : IBuilder<TModel>
         {
             foreach (TCustomBuilder b in builders)
             {
@@ -79,7 +79,7 @@ namespace Queo.Commons.Builders.Model.Builder
         /// </summary>
         /// <param name="buildAction">Build action to base the builder on</param>
         /// <typeparam name="TCustomBuilder">Type of builder that should be created</typeparam>
-        public void Add<TCustomBuilder>(Action<TCustomBuilder> buildAction) where TCustomBuilder : IModelBuilder<TModel>
+        public void Add<TCustomBuilder>(Action<TCustomBuilder> buildAction) where TCustomBuilder : IBuilder<TModel>
         {
             _builders.Add(buildAction.ToBuilder(_factory));
         }
@@ -88,7 +88,7 @@ namespace Queo.Commons.Builders.Model.Builder
         /// <summary>
         ///     Returns All model builders that where added to the collection
         /// </summary>
-        public IEnumerable<IModelBuilder<TModel>> GetBuilders()
+        public IEnumerable<IBuilder<TModel>> GetBuilders()
         {
             return _builders;
         }
@@ -115,7 +115,7 @@ namespace Queo.Commons.Builders.Model.Builder
         /// 	Only the builders of the specific type are returned.
         ///		The collection might still contain different types of builders.
         /// </remarks>
-        public IEnumerable<TBuilderType> GetBuilders<TBuilderType>() where TBuilderType : IModelBuilder<TModel>
+        public IEnumerable<TBuilderType> GetBuilders<TBuilderType>() where TBuilderType : IBuilder<TModel>
         {
             return _builders.OfType<TBuilderType>();
         }
@@ -135,9 +135,9 @@ namespace Queo.Commons.Builders.Model.Builder
         public BuilderCollection<TDefaultBuilder, TModel> Recreate()
         {
             var collectionCopy = new BuilderCollection<TDefaultBuilder, TModel>(_factory);
-            foreach (IModelBuilder<TModel> builder in _builders)
+            foreach (IBuilder<TModel> builder in _builders)
             {
-                if (builder is IRecreatable<IModelBuilder<TModel>> recreatable)
+                if (builder is IRecreatable<IBuilder<TModel>> recreatable)
                 {
                     collectionCopy.Add(recreatable.Recreate());
                 }
@@ -155,7 +155,7 @@ namespace Queo.Commons.Builders.Model.Builder
             return GetBuilders().GetEnumerator();
         }
 
-        IEnumerator<IModelBuilder<TModel>> IEnumerable<IModelBuilder<TModel>>.GetEnumerator()
+        IEnumerator<IBuilder<TModel>> IEnumerable<IBuilder<TModel>>.GetEnumerator()
         {
             return GetBuilders().GetEnumerator();
         }

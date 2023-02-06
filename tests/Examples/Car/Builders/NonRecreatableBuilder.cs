@@ -7,7 +7,7 @@ namespace Queo.Commons.Builders.Model.Examples.Car.Builders
     ///     The IRecreatable is a use case for ModelBuilders because they don't allow modification after beeing build
     ///     So if you want to use this builder within a ModelBuilder you shold implement the IRecreatable interface
     /// </summary>
-    public class NonRecreatableBuilder : IModelBuilder<Car>
+    public class NonRecreatableBuilder : IBuilder<Car>
     {
         public Car Build()
         {

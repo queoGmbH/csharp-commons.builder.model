@@ -9,7 +9,7 @@ namespace Queo.Commons.Builders.Model.Examples.DAG
     {
         string _name;
         string _description;
-        private IModelBuilder<Source> _source;
+        private IBuilder<Source> _source;
         private BuilderCollection<VertexBuilder, Vertex> _vertices;
 
         public VertexBuilder(IBuilderFactory factory) : base(factory)
@@ -37,8 +37,8 @@ namespace Queo.Commons.Builders.Model.Examples.DAG
         {
             _vertices.Add(c => buildAction(c.WithSource(_source)));
         });
-        public VertexBuilder AddChild(IModelBuilder<Vertex> builder) => Set(() => _vertices.Add(builder));
-        public VertexBuilder WithSource(IModelBuilder<Source> sourceBuilder) => Set(() => _source = sourceBuilder);
+        public VertexBuilder AddChild(IBuilder<Vertex> builder) => Set(() => _vertices.Add(builder));
+        public VertexBuilder WithSource(IBuilder<Source> sourceBuilder) => Set(() => _source = sourceBuilder);
         public VertexBuilder WithSource(Action<SourceBuilder> builderAction) => Set(() =>
         {
             _source = FromAction<SourceBuilder, Source>(builderAction);

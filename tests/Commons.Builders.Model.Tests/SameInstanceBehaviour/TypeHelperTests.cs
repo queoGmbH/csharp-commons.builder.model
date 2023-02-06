@@ -56,7 +56,7 @@ namespace Queo.Commons.Builders.Model.Tests.SameInstanceBehaviour
         [Test]
         public void TestModelBuilder_InterFaceType()
         {
-            bool isA = typeof(ModelBuilder<>).ImplementsInterface(typeof(IModelBuilder<>));
+            bool isA = typeof(ModelBuilder<>).ImplementsInterface(typeof(IBuilder<>));
 
             isA.Should().BeTrue();
         }
@@ -64,7 +64,7 @@ namespace Queo.Commons.Builders.Model.Tests.SameInstanceBehaviour
         [Test]
         public void TestModelBuilder_SpecificOnGeneric()
         {
-            bool isA = typeof(ModelBuilder<Car>).ImplementsInterface(typeof(IModelBuilder<>));
+            bool isA = typeof(ModelBuilder<Car>).ImplementsInterface(typeof(IBuilder<>));
 
             isA.Should().BeTrue();
         }
@@ -100,7 +100,7 @@ namespace Queo.Commons.Builders.Model.Tests.SameInstanceBehaviour
         [Test]
         public void TestGenericArguments_DirectType()
         {
-            var types = typeof(ModelBuilder<Car>).GetGenericArgsOf(typeof(IModelBuilder<>));
+            var types = typeof(ModelBuilder<Car>).GetGenericArgsOf(typeof(IBuilder<>));
 
             types.Should().Equal(typeof(Car));
         }
@@ -108,7 +108,7 @@ namespace Queo.Commons.Builders.Model.Tests.SameInstanceBehaviour
         [Test]
         public void TestGenericArguments_BuilderType()
         {
-            var types = typeof(CarBuilder).GetGenericArgsOf(typeof(IModelBuilder<>));
+            var types = typeof(CarBuilder).GetGenericArgsOf(typeof(IBuilder<>));
 
             types.Should().Equal(typeof(Car));
         }

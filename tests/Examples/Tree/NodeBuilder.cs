@@ -21,7 +21,7 @@ namespace Queo.Commons.Builders.Model.Examples.Tree
         public NodeBuilder WithName(string name) => Set(() => _name = name);
         public NodeBuilder WithDescription(string description) => Set(() => _description = description);
         public NodeBuilder AddChild(Action<NodeBuilder> buildAction) => Set(() => _childs.Add(buildAction));
-        public NodeBuilder AddChild(IModelBuilder<Node> builder) => Set(() => _childs.Add(builder));
+        public NodeBuilder AddChild(IBuilder<Node> builder) => Set(() => _childs.Add(builder));
 
         protected override Node BuildModel()
         {

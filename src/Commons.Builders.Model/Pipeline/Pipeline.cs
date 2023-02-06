@@ -14,7 +14,7 @@ namespace Queo.Commons.Builders.Model.Pipeline
         public Pipeline()
         {
             _postBuildCommands = new List<Action<TModel>>();
-            _preBuildCommands = new List<Action<IModelBuilder<TModel>>>();
+            _preBuildCommands = new List<Action<IBuilder<TModel>>>();
         }
 
         public void Execute()

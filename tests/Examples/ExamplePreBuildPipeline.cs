@@ -8,7 +8,7 @@ namespace Queo.Commons.Builders.Model.Examples
     public class ExamplePreBuildPipeline : IPreBuildPipeline
     {
         //FIXME: this seems quite useless. I would need to know at least what type is executed?
-        public void Execute<TBuilder, TModel>(TBuilder builder) where TBuilder : IModelBuilder<TModel>
+        public void Execute<TBuilder, TModel>(TBuilder builder) where TBuilder : IBuilder<TModel>
         {
             var builderType = builder.GetType();
             //TODO: is it good that this is possible?

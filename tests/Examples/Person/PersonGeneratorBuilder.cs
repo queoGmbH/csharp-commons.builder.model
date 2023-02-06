@@ -32,7 +32,7 @@ namespace Queo.Commons.Builders.Model.Examples.Person
 
         public PersonGeneratorBuilder WithMaxAge(int maxAge) => Set(() => _maxAge = maxAge);
         public PersonGeneratorBuilder WithMinAge(int minAge) => Set(() => _minAge = minAge);
-        public PersonGeneratorBuilder HasChild(IModelBuilder<Person> builder) => Set(() => _children.Add(builder));
+        public PersonGeneratorBuilder HasChild(IBuilder<Person> builder) => Set(() => _children.Add(builder));
         public PersonGeneratorBuilder HasChild(Action<PersonGeneratorBuilder> builderAction) => Set(() => _children.Add(builderAction));
 
         protected override PersonGeneratorBuilder Set(Action action) => Set<PersonGeneratorBuilder>(action);

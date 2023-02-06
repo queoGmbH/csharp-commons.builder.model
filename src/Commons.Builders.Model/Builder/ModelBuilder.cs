@@ -13,7 +13,7 @@ namespace Queo.Commons.Builders.Model.Builder
     ///     Base class for a model builder.
     /// </summary>
     /// <typeparam name="TModel">Model class type</typeparam>
-    public abstract class ModelBuilder<TModel> : IModelBuilder<TModel>, IRecreatable<ModelBuilder<TModel>>
+    public abstract class ModelBuilder<TModel> : IBuilder<TModel>, IRecreatable<ModelBuilder<TModel>>
     {
 
         public static implicit operator TModel(ModelBuilder<TModel> builder) => builder.Build();
@@ -209,7 +209,7 @@ namespace Queo.Commons.Builders.Model.Builder
         /// <typeparam name="TBuilder">Builder type to be created</typeparam>
         /// <typeparam name="TBuilderModel">Model type that the builder produces</typeparam>
         protected TBuilder FromAction<TBuilder, TBuilderModel>(Action<TBuilder> builderAction)
-                           where TBuilder : IModelBuilder<TBuilderModel>
+                           where TBuilder : IBuilder<TBuilderModel>
         {
             return builderAction.ToBuilder(_factory);
         }

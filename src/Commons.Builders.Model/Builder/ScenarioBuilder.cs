@@ -10,7 +10,7 @@ using Queo.Commons.Builders.Model.Utils;
 namespace Queo.Commons.Builders.Model.Builder
 {
     //TODO: the type of this is kind of a BuilderCollection
-    public abstract class ScenarioBuilder<T> : IModelBuilder<IEnumerable<IModelBuilder<T>>>
+    public abstract class ScenarioBuilder<T> : IBuilder<IEnumerable<IBuilder<T>>>
     {
         protected IBuilderFactory _factory;
         /// <summary>
@@ -21,9 +21,9 @@ namespace Queo.Commons.Builders.Model.Builder
         /// <param name="factory">The factory for the builders the scenario creates </param>
         protected ScenarioBuilder(IBuilderFactory factory) { _factory = factory; }
 
-        private IEnumerable<IModelBuilder<T>>? _model;
+        private IEnumerable<IBuilder<T>>? _model;
 
-        public IEnumerable<IModelBuilder<T>> Build()
+        public IEnumerable<IBuilder<T>> Build()
         {
             if (_model is null)
             {
@@ -45,7 +45,7 @@ namespace Queo.Commons.Builders.Model.Builder
             return Get(v => true);
         }
 
-        protected abstract IEnumerable<IModelBuilder<T>> BuildModel();
+        protected abstract IEnumerable<IBuilder<T>> BuildModel();
 
         /// <summary>
         ///		Converts a build action into a builder
@@ -56,7 +56,7 @@ namespace Queo.Commons.Builders.Model.Builder
         /// <typeparam name="TBuilder">Builder type to be created</typeparam>
         /// <typeparam name="TBuilderModel">Model type that the builder produces</typeparam>
         protected TBuilder FromAction<TBuilder, TBuilderModel>(Action<TBuilder> builderAction)
-                           where TBuilder : IModelBuilder<TBuilderModel>
+                           where TBuilder : IBuilder<TBuilderModel>
         {
             return builderAction.ToBuilder(_factory);
         }
@@ -66,7 +66,7 @@ namespace Queo.Commons.Builders.Model.Builder
         ///		Override this method and call the generic version with your builder type
         /// </summary>
         /// <param name="action">Action that sets the member variable</param>
-        protected virtual IModelBuilder<IEnumerable<IModelBuilder<T>>> Set(Action action) => Set<ScenarioBuilder<T>>(action);
+        protected virtual IBuilder<IEnumerable<IBuilder<T>>> Set(Action action) => Set<ScenarioBuilder<T>>(action);
 
         /// <summary>
         ///		QoL Method for simpler builder method definition

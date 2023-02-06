@@ -5,7 +5,7 @@ namespace Queo.Commons.Builders.Model.Examples.Car.Builders
     /// <summary>
     ///     You can create your own version of a builder by implementing the required interfaces
     /// </summary>
-    public class NonModelBuilder : IModelBuilder<Car>, IRecreatable<NonModelBuilder>
+    public class NonModelBuilder : IBuilder<Car>, IRecreatable<NonModelBuilder>
     {
         public Car Build()
         {

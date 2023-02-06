@@ -9,7 +9,7 @@ namespace Queo.Commons.Builders.Model.Pipeline
 {
     public class EmptyPipeline : IPreBuildPipeline, IPostBuildPipeline
     {
-        public void Execute<TBuilder, TModel>(TBuilder builder) where TBuilder : IModelBuilder<TModel>
+        public void Execute<TBuilder, TModel>(TBuilder builder) where TBuilder : IBuilder<TModel>
         {
             // Do nothing
         }

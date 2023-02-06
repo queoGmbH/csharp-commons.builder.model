@@ -9,6 +9,6 @@ namespace Queo.Commons.Builders.Model.Pipeline
 {
     public interface IPreBuildPipeline
     {
-        void Execute<TBuilder, TModel>(TBuilder builder) where TBuilder : IModelBuilder<TModel>;
+        void Execute<TBuilder, TModel>(TBuilder builder) where TBuilder : IBuilder<TModel>;
     }
 }

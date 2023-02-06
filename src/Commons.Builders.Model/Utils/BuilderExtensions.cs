@@ -9,12 +9,12 @@ namespace Queo.Commons.Builders.Model.Utils
 {
     public static class BuilderExtensions
     {
-        public static IModelBuilder<TModel> Immutable<TModel>(this IModelBuilder<TModel> mutableBuilder)
+        public static IBuilder<TModel> Immutable<TModel>(this IBuilder<TModel> mutableBuilder)
         {
             return new ImmutableBuilderProxy<TModel>(mutableBuilder);
         }
 
-        public static IEnumerable<IModelBuilder<TModel>> Immutable<TModel>(this IEnumerable<IModelBuilder<TModel>> mutableCollection)
+        public static IEnumerable<IBuilder<TModel>> Immutable<TModel>(this IEnumerable<IBuilder<TModel>> mutableCollection)
         {
             return mutableCollection.Select(b => b.Immutable());
         }

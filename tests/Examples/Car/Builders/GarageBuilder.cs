@@ -9,7 +9,7 @@ namespace Queo.Commons.Builders.Model.Examples.Car.Builders
     {
 
         private string _address;
-        private IModelBuilder<Car> _car;
+        private IBuilder<Car> _car;
 
         public GarageBuilder(IBuilderFactory factory) : base(factory)
         {

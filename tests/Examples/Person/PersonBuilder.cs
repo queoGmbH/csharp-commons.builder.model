@@ -20,7 +20,7 @@ namespace Queo.Commons.Builders.Model.Examples.Person
         }
 
         public PersonBuilder HasChild(Action<PersonBuilder> buildAction) => Set(() => _children.Add(buildAction));
-        public PersonBuilder HasChild(IModelBuilder<Person> builder) => Set(() => _children.Add(builder));
+        public PersonBuilder HasChild(IBuilder<Person> builder) => Set(() => _children.Add(builder));
         public PersonBuilder WithName(string name) => Set(() => _name = name);
         public PersonBuilder WithAge(int age) => Set(() => _age = age);
 
