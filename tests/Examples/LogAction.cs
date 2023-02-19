@@ -13,11 +13,11 @@ namespace Queo.Commons.Builders.Model.Examples
             var modelType = typeof(TModel);
             if (builder is ModelBuilder<TModel> modelBuilder)
             {
-                Console.WriteLine($"Pipeline: About to build {modelType.Name} using a {builderType.Name} builder with index {modelBuilder.BuilderIndex}.");
+                Console.WriteLine($"PreBuild: About to build {modelType.Name} using a {builderType.Name} builder with index {modelBuilder.BuilderIndex}.");
             }
             else
             {
-                Console.WriteLine($"Pipeline: About to build {modelType.Name} using a {builderType.Name} builder.");
+                Console.WriteLine($"PreBuild: About to build {modelType.Name} using a {builderType.Name} builder.");
             }
         }
     }

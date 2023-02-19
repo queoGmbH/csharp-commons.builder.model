@@ -103,12 +103,15 @@ namespace Queo.Commons.Builders.Model.Utils
         ///		Determines weather or not the current type should be handled like a value type
         ///		This is neccessary because some types (like strings) who are immutable
         ///		are not considered value types, but still should be handled as such
+        ///     TODO: list is incomplete
         /// </summary>
         public static bool HandleAsValueType(this Type currentType)
         {
             return currentType.IsValueType ||
-                       currentType == typeof(String) ||
-                       currentType == typeof(Decimal);
+                   currentType.IsPrimitive ||
+                   //    currentType == typeof(string) ||
+                   currentType == typeof(String) ||
+                   currentType == typeof(Decimal);
         }
     }
 }

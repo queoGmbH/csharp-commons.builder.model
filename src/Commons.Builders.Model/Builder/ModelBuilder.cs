@@ -164,16 +164,23 @@ namespace Queo.Commons.Builders.Model.Builder
             {
                 CopyValue(builderCopyInstance, field);
             }
-            else if (field.FieldType.ImplementsInterface(typeof(IRecreatable<>)))
+            else if (GetObjectType(field).ImplementsInterface(typeof(IRecreatable<>)))
             {
                 InvokeRecreatable(builderCopyInstance, field);
             }
             else
             {
-                throw new ValidationException("Invalid builder implementation. The builder should only contain " +
-                                              "ValueTypes, ModelBuilders or BuilderCollections!");
+                throw new ValidationException("Error during recreation of the builder: " +
+                                              $"Only value types and {typeof(IRecreatable<>)} can be recreated!" +
+                                              $"\nFailed on type: {GetObjectType(field)}");
             }
         }
+
+        /// <summary>
+        ///     Get's the actual type of the value that's assinged to the field (object type)
+        /// </summary>
+        /// <param name="field">The field (reference type)</param>
+        private Type GetObjectType(FieldInfo field) => field.GetValue(this).GetType();
 
         /// <summary>
         ///		Copies the values from the this builder to the new instance
@@ -195,8 +202,8 @@ namespace Queo.Commons.Builders.Model.Builder
         private void InvokeRecreatable(object builderCopyInstance, FieldInfo field)
         {
             object recreatable = field.GetValue(this);
-            object newCreated = field.FieldType.GetMethod(nameof(IRecreatable<object>.Recreate))
-                                               .Invoke(recreatable, null);
+            object newCreated = recreatable.GetType().GetMethod(nameof(IRecreatable<object>.Recreate))
+                                                     .Invoke(recreatable, null);
             field.SetValue(builderCopyInstance, newCreated);
         }
 
