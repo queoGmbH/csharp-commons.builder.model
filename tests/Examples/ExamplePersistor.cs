@@ -4,7 +4,7 @@ using Queo.Commons.Builders.Model.Peristence;
 
 namespace Queo.Commons.Builders.Model.Examples
 {
-    public class ExamplePersistor : IPersistor
+    public class ExamplePersistor : IPersistenceStrategy
     {
         public void Save(object entity)
         {

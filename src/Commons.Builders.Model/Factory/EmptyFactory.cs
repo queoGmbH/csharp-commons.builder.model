@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-using Queo.Commons.Builders.Model.Pipeline;
+using Queo.Commons.Builders.Model.BuildAction;
 
 namespace Queo.Commons.Builders.Model.Factory
 {
@@ -11,13 +11,13 @@ namespace Queo.Commons.Builders.Model.Factory
     {
         public EmptyFactory()
         {
-            var emptyPipeline = new EmptyPipeline();
-            PreBuildPipeline = emptyPipeline;
-            PostBuildPipeline = emptyPipeline;
+            var emptyPipeline = new EmptyAction();
+            PreBuild = emptyPipeline;
+            PostBuild = emptyPipeline;
         }
 
-        public IPreBuildPipeline PreBuildPipeline { get; }
-        public IPostBuildPipeline PostBuildPipeline { get; }
+        public IPreBuildAction PreBuild { get; }
+        public IPostBuildAction PostBuild { get; }
         public TBuilder Create<TBuilder>()
         {
             throw new InvalidOperationException("Create is not supposed to be called on an empty factory! " +

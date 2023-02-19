@@ -24,9 +24,9 @@ namespace Queo.Commons.Builders.Model.Builder
         private static int BUILDER_INDEX = 0;
 
         /// <summary>
-        ///     Access to builder index in inherited classes
+        ///     Preserve index information that this builder used to build it's model
         /// </summary>
-        protected int BuilderIndex => BUILDER_INDEX;
+        public int BuilderIndex { get; private set; }
 
         /// <summary>
         ///		'Cached' Model, to ensure the same instance is returned when calling 'Build()'
@@ -49,7 +49,7 @@ namespace Queo.Commons.Builders.Model.Builder
         {
             if (factory is null) throw new ArgumentNullException("Factory can not be null!");
             _factory = factory;
-            BUILDER_INDEX++;
+            BuilderIndex = ++BUILDER_INDEX;
         }
 
         /// <inheritdoc/>
@@ -57,9 +57,9 @@ namespace Queo.Commons.Builders.Model.Builder
         {
             if (_model is null)
             {
-                _factory.PreBuildPipeline.Execute<ModelBuilder<TModel>, TModel>(this);
+                _factory.PreBuild.Execute<TModel>(this);
                 _model = BuildModel();
-                _factory.PostBuildPipeline.Execute<TModel>(_model!);
+                _factory.PostBuild.Execute<TModel>(_model!);
             }
             return _model;
         }

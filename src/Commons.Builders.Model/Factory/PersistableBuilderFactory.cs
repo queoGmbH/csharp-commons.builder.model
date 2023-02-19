@@ -3,24 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using Queo.Commons.Builders.Model.BuildAction;
 using Queo.Commons.Builders.Model.Peristence;
-using Queo.Commons.Builders.Model.Pipeline;
 
 namespace Queo.Commons.Builders.Model.Factory
 {
     public abstract class PersistableBuilderFactory : IBuilderFactory
     {
-        protected PersistableBuilderFactory(IPersistor persistor)
+        public IPreBuildAction PreBuild { get; }
+        public IPostBuildAction PostBuild { get; }
+        protected PersistableBuilderFactory(IPersistenceStrategy persistor)
         {
-            if (persistor is null) throw new ArgumentNullException("Persistor can not be null!");
+            if (persistor is null) throw new ArgumentNullException("PersistenceStrategy can not be null!");
 
-            var pipeline = new PersistorPipeline(persistor);
-            PreBuildPipeline = pipeline;
-            PostBuildPipeline = pipeline;
+            PreBuild = new EmptyAction();
+            PostBuild = new PersistenceAction(persistor);
         }
 
         public abstract TBuilder Create<TBuilder>();
-        public IPreBuildPipeline PreBuildPipeline { get; }
-        public IPostBuildPipeline PostBuildPipeline { get; }
     }
 }

@@ -4,8 +4,7 @@
     <Company>queo GmbH</Company>
     <Copyright>2023 queo GmbH</Copyright>
     <Product>Queo Commons ModelBuilder</Product>
-    <AssemblyVersion>0.1.0</AssemblyVersion>
-    <FileVersion>$(AssemblyVersion)</FileVersion>
-    <version>$(AssemblyVersion)-Beta</version>
+    <AssemblyVersion>0.0.0</AssemblyVersion>
+    <FileVersion>0.1.0</FileVersion>
   </PropertyGroup>
 </Project>
