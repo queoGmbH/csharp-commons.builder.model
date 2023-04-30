@@ -5,7 +5,7 @@ using Queo.Commons.Builders.Model.Builder;
 
 namespace Queo.Commons.Builders.Model.Utils;
 
-//TODO: WIP
+//TODO: WIP - Immutability handling
 public static class BuilderExtensions
 {
     public static IBuilder<TModel> Immutable<TModel>(this IBuilder<TModel> mutableBuilder)

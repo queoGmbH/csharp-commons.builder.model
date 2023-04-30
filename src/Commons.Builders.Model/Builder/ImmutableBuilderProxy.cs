@@ -2,7 +2,7 @@ using System;
 
 namespace Queo.Commons.Builders.Model.Builder
 {
-    //TODO: WIP
+    //TODO: WIP - Immutabliity handling
     public class ImmutableBuilderProxy<TModel> : IBuilder<TModel>
     {
         private readonly IBuilder<TModel> _sourceBuilder;
@@ -14,7 +14,7 @@ namespace Queo.Commons.Builders.Model.Builder
 
         public TModel Build()
         {
-            //TODO: dunno if this handling is right
+            //TEST: check if this is the right way to handle this
             if (_sourceBuilder is ModelBuilder<TModel> modelBuilder)
             {
                 if (modelBuilder.IsFinal)

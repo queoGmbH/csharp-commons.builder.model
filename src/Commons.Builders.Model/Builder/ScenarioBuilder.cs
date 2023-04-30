@@ -7,10 +7,11 @@ using Queo.Commons.Builders.Model.Utils;
 
 namespace Queo.Commons.Builders.Model.Builder;
 
-//TODO: WIP
+//TODO: WIP - Proper abstractions
 public abstract class ScenarioBuilder<T> : IBuilder<IEnumerable<IBuilder<T>>>
 {
     protected IBuilderFactory _factory;
+
     /// <summary>
     ///     A scenario builder doesn't want to persist himself, because he creates a collection of builders
     ///     So not the collection itself, but the models of the builders in the collections should be persisted
@@ -18,6 +19,19 @@ public abstract class ScenarioBuilder<T> : IBuilder<IEnumerable<IBuilder<T>>>
     /// </summary>
     /// <param name="factory">The factory for the builders the scenario creates </param>
     protected ScenarioBuilder(IBuilderFactory factory) { _factory = factory; }
+
+
+    /// <summary>
+    ///    Resolves all the buliders, so that this builder can not be changed anymore
+    ///    Important to call if none of the other methods are called, that resolve this
+    ///    Only when the bulider is resolved the entities are written via the persitence strategy
+    /// </summary>
+    public ScenarioBuilder<T> Commit()
+    {
+        All();
+        return this;
+    }
+
 
     private IEnumerable<IBuilder<T>>? _model;
 
@@ -30,12 +44,13 @@ public abstract class ScenarioBuilder<T> : IBuilder<IEnumerable<IBuilder<T>>>
         }
         return _model;
     }
+
     public IEnumerable<T> Get(Func<T, bool> condition)
     {
         //We want to resolve it here, that the persiting is executed!
-        return Build().Select(b => b.Build())
-                      .ToList()
-                      .Where(condition);
+        var results = Build().Select(b => b.Build())
+                             .ToArray();
+        return results.Where(condition).ToArray();
     }
 
     public IEnumerable<T> All()
@@ -75,14 +90,11 @@ public abstract class ScenarioBuilder<T> : IBuilder<IEnumerable<IBuilder<T>>>
     /// <returns></returns>
     protected TBuilder Set<TBuilder>(Action setAction) where TBuilder : ScenarioBuilder<T>
     {
-        //TODO:?
+        //TODO: - Same handling as Model builder or different?
+        // This is probably not required because the scenario holds a list of builders
+        // And not the model itself
         // Validate();
         setAction();
         return (TBuilder)this;
     }
-
-    // IEnumerable<IModelBuilder<T>> IModelBuilder<IEnumerable<IModelBuilder<T>>>.Build()
-    // {
-    //     throw new NotImplementedException();
-    // }
 }

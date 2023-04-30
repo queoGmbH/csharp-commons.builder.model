@@ -8,7 +8,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <!-- TODO: update packages -->
         <PackageReference
             Include="FluentAssertions"
             Version="6.6.0" />

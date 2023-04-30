@@ -16,7 +16,7 @@ public class PersistenceAction : IPostBuildAction
         _persistor = persistor;
     }
 
-    public void Execute<TModel>(TModel model)
+    public virtual void Execute<TModel>(TModel model)
     {
         if (model is null) throw new ArgumentNullException("The model for the post build action should never be null!");
         _persistor.Save(model);

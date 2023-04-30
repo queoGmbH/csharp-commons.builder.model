@@ -5,8 +5,9 @@ namespace Queo.Commons.Builders.Model.Peristence;
 /// </summary>
 public class InMemory : IPersistenceStrategy
 {
-    public void Save(object entity)
+    public T Save<T>(T entity)
     {
         //nothing to do
+        return entity;
     }
 }

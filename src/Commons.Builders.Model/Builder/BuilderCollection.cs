@@ -145,7 +145,7 @@ public class BuilderCollection<TDefaultBuilder, TModel>
     /// </summary>
     public IEnumerable<TModel> BuildModels()
     {
-        return _builders.Select(s => s.Build());
+        return _builders.Select(s => s.Build()).ToArray();
     }
 
 

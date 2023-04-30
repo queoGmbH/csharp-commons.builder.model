@@ -12,5 +12,5 @@ public interface IPersistenceStrategy
     ///     Might need a connection to a database or other kind of storage
     /// </summary>
     /// <param name="entity">The object to be persistet</param>
-    void Save(object entity);
+    T Save<T>(T entity);
 }

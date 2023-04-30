@@ -6,10 +6,11 @@ namespace Queo.Commons.Builders.Model.Examples
 {
     public class ExamplePersistor : IPersistenceStrategy
     {
-        public void Save(object entity)
+        public T Save<T>(T entity)
         {
             //persistence logic comes here
-            Console.WriteLine($"Persisting entity: {entity.GetType().Name}");
+            Console.WriteLine($"Persisting entity: {entity?.GetType().Name}");
+            return entity;
         }
     }
 }
