@@ -1,0 +1,27 @@
+name: Cake Pipeline
+
+on:
+    push:
+        branches:
+            - develop
+            - master
+    pull_request:
+        branches:
+            - develop
+            - master
+
+jobs:
+    build:
+        runs-on: windows-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v2
+              # this is required for the gitversion.tool to be able to work correctly
+              with:
+                fetch-depth: 0
+
+            - name: Run Script
+              shell: pwsh
+              run: |
+                  .\build.ps1 --target=BuildAndTest
