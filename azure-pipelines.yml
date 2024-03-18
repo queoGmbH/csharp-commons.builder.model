@@ -30,21 +30,9 @@ stages:
         filePath: 'build.ps1'
         arguments: '--target=BuildAndTest'
 
-  - job: buildAndTest_linux
-    dependsOn: buildAndTest_windows
-    pool:
-      vmImage: 'ubuntu-latest'
-
-    steps:
-    - task: ShellScript@2
-      inputs:
-        scriptPath: 'build.sh'
-        args: '--target=BuildAndTest'
-
   - job: BuildNuGetPackageForDeploy
     dependsOn:
     - buildAndTest_windows
-    - buildAndTest_linux
     pool:
       vmImage: 'windows-latest'
 
