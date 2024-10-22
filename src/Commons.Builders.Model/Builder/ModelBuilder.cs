@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
@@ -64,6 +64,7 @@ namespace Queo.Commons.Builders.Model.Builder
             {
                 _factory.PreBuild.Execute<TModel>(this);
                 _model = BuildModel();
+                AfterModel(_model);
                 _factory.PostBuild.Execute<TModel>(_model!);
             }
             return _model;
@@ -73,6 +74,24 @@ namespace Queo.Commons.Builders.Model.Builder
         ///		Method where logic for building the Model will be implemented.
         /// </summary>
         protected abstract TModel BuildModel();
+
+
+        /// <summary>
+        ///		Method that can be overwritten for common 'Chicken and egg' situations during setup
+        ///		This will run before the factories post actions are executed, but after the model is build.
+        ///		This allows us to resolve a dependency of a child builder, without running into a cyclic call.
+        ///
+        ///		The way this works is, the parent will get build, without the children connected,
+        ///		and then the children will be built in this method and then connected to the parent.
+        ///
+        ///		model = Parent.Build();
+        ///		child = _childBuilder.WithParent(Parent).Build();
+        ///		model.Add(child);
+        /// </summary>
+        protected virtual void AfterModel(TModel model)
+        {
+            // intentionally empty, since this is a optional action, to be overwritten by specific builders
+        }
 
         /// <summary>
         ///		Validation if the builder is locked or not.
