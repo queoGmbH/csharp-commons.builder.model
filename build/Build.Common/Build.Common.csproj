@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Cake.Common" Version="$(CakeVersion)" />
+    <PackageReference Include="Cake.Core" Version="$(CakeVersion)" />
+    <PackageReference Include="Cake.SemVer" Version="$(CakeVersion)" />
+  </ItemGroup>
+
+</Project>

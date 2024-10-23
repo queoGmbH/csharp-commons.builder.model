@@ -1,0 +1,101 @@
+# .NET Desktop
+# Build and run tests for .NET Desktop or Windows classic desktop solutions.
+# Add steps that publish symbols, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
+
+schedules:
+- cron: "0 0 * * 3"
+  displayName: Wednesday midnight build
+  branches:
+    include:
+    - master
+  always: true
+
+trigger:
+- main
+- develop
+
+stages:
+- stage: Build
+  displayName: 'Build and test package'
+
+  jobs:
+  - job: buildAndTest_windows
+    pool:
+      vmImage: 'windows-latest'
+
+    steps:
+    - task: PowerShell@2
+      inputs:
+        filePath: 'build.ps1'
+        arguments: '--target=BuildAndTest'
+
+  - job: BuildNuGetPackageForDeploy
+    dependsOn:
+    - buildAndTest_windows
+    pool:
+      vmImage: 'windows-latest'
+
+    steps:
+    - task: PowerShell@2
+      inputs:
+        filePath: 'build.ps1'
+        arguments: '--target=BuildPackage'
+
+    - publish: '$(System.DefaultWorkingDirectory)/.artifacts'
+      artifact: NuGetPackage
+
+- stage: Publish
+  displayName: 'Publish to nuget.org'
+  condition: and(succeeded(), in(variables['build.sourceBranch'], 'refs/heads/master', 'refs/heads/develop'), ne(variables['Build.Reason'], 'Schedule'))
+
+  jobs:
+  - job: publish
+    steps:
+    - checkout: 'none'
+
+    - download: current
+      artifact: NuGetPackage
+
+    - task: NuGetAuthenticate@1
+      inputs:
+        nuGetServiceConnection: 'queoNuGetOrg'
+
+    - task: NuGetCommand@2
+      inputs:
+        command: push
+        nuGetFeedType: 'external'
+        publishFeedCredentials: 'queoNuGetOrg'
+        packagesToPush: $(Pipeline.Workspace)/**/*.nupkg
+
+  - deployment: DeployToBeta
+    displayName: Deploy to beta
+    dependsOn: publish
+    condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/develop'))
+    pool:
+      vmImage: 'ubuntu-latest'
+    # Creates an environment if it doesn't exist. Seems not to work. the environment must exist.
+    environment: builder_model-BetaChannel
+    strategy:
+      # Default deployment strategy, more coming...
+      runOnce:
+        deploy:
+          steps:
+          - checkout: self
+          - script: echo deployment to beta
+
+  - deployment: DeployToProd
+    displayName: Deploy to prod
+    dependsOn: publish
+    condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
+    pool:
+      vmImage: 'ubuntu-latest'
+    # Creates an environment if it doesn't exist.
+    environment: builder_model-ReleaseChannel
+    strategy:
+      # Default deployment strategy, more coming...
+      runOnce:
+        deploy:
+          steps:
+          - checkout: self
+          - script: echo deployment to release
