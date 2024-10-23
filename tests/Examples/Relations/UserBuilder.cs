@@ -26,7 +26,7 @@ public class UserBuilder : ModelBuilder<User>
 
     protected override User BuildModel() => new(_name);
 
-    protected override void AfterModel(User model)
+    protected override void PostBuild(User model)
     {
         if (_org is not null)
         {

@@ -27,7 +27,7 @@ public class CountryBuilder : ModelBuilder<Country>
 
     protected override Country BuildModel() => new(_name);
 
-    protected override void AfterModel(Country model)
+    protected override void PostBuild(Country model)
     {
         if (_president is not null)
         {

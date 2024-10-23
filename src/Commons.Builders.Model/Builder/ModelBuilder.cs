@@ -46,6 +46,12 @@ namespace Queo.Commons.Builders.Model.Builder
         protected readonly IBuilderFactory _factory;
 
         /// <summary>
+        ///    Flag that specifies if the post build should be run before or after the pipeline.
+        ///    The pipeline is provided by the factory and will usually contain the persist post build action.
+        /// </summary>
+        protected bool _prePipelinePostBuild = false;
+
+        /// <summary>
         ///     ModelBuilder that uses the same Persistor to Persist itself as it's children
         ///     Used by the common builders, that just build a model
         /// </summary>
@@ -64,8 +70,10 @@ namespace Queo.Commons.Builders.Model.Builder
             {
                 _factory.PreBuild.Execute<TModel>(this);
                 _model = BuildModel();
-                AfterModel(_model);
+
+                if (_prePipelinePostBuild) PostBuild(_model);
                 _factory.PostBuild.Execute<TModel>(_model!);
+                if (!_prePipelinePostBuild) PostBuild(_model);
             }
             return _model;
         }
@@ -78,7 +86,6 @@ namespace Queo.Commons.Builders.Model.Builder
 
         /// <summary>
         ///		Method that can be overwritten for common 'Chicken and egg' situations during setup
-        ///		This will run before the factories post actions are executed, but after the model is build.
         ///		This allows us to resolve a dependency of a child builder, without running into a cyclic call.
         ///
         ///		The way this works is, the parent will get build, without the children connected,
@@ -87,8 +94,11 @@ namespace Queo.Commons.Builders.Model.Builder
         ///		model = Parent.Build();
         ///		child = _childBuilder.WithParent(Parent).Build();
         ///		model.Add(child);
+        ///
+        ///		If this post build should be run before the pipeline actions (factory.PostBuild)
+        ///		the _prePipelinePostBuild flag can be set to true.
         /// </summary>
-        protected virtual void AfterModel(TModel model)
+        protected virtual void PostBuild(TModel model)
         {
             // intentionally empty, since this is a optional action, to be overwritten by specific builders
         }
